@@ -4,29 +4,82 @@ from PIL import Image
 
 pic_dir = '.\\pic\\'
 dic_path = '.\\dic.txt'
+game_path = '.\\games.txt'
 config_path = '.\\config.txt'
+steam_path = ''
 
 dic = []
+game_list = []
+
+dic_count = 0
+game_count = 0
 sleep_min_min = 0
 sleep_min_max = 12
-count = 0
-target_window_name = ""
+say_chance = 73
+window = None
+window_name = None
+mode = 0
+
+
+def Mysetup(var, content):
+    if var == 'STEAM_PATH':
+        print("stm")
+        global steam_path
+        steam_path = content.replace("\\", "\\\\")
+    elif var == 'SLEEP_MIN':
+        global sleep_min_min
+        sleep_min_min = int(content)
+    elif var == 'SLEEP_MAX':
+        global sleep_min_max
+        sleep_min_max = int(content)
+    elif var == 'TARGET_WINDOW':
+        global window
+        global window_name
+        window_name = str(content)
+        window = pyautogui.getWindowsWithTitle(window_name)
+    elif var == 'MODE':
+        global mode
+        mode = int(content)
+    elif var == 'WORD_CHANCE':
+        global say_chance
+        say_chance = int(content)
+
+
+with open(game_path, 'r',encoding='utf8') as fo:
+    for lines in fo:
+        lines = lines.replace("\n","")
+        game = lines.split(",")
+        game_list.append(game)
+    game_count = len(game_list)
 
 with open(dic_path, 'r',encoding='utf8') as fo:
     for lines in fo:
-        count += 1
         dic.append(lines.replace("\n",""))
+    dic_count = len(dic)
 
 with open(config_path, 'r',encoding='utf8') as fo:
-        temp = fo.readline()
-        temp = temp.replace("\n","")
-        temptime = temp.split(",")
-        sleep_min_min = int(temptime[0])
-        sleep_min_max = int(temptime[1])
-        temp = fo.readline()
-        target_window_name = temp.replace("\n","")
+    for lines in fo:
+        lines = lines.replace("\n", "")
+        while lines.find("  ") != -1:
+            lines = lines.replace("  ", " ")
+        line = lines.split(" ")
+        Mysetup(line[0][1:len(line[0]) - 1], line[1])
 
-window = pyautogui.getWindowsWithTitle(target_window_name)
+def Sham():
+    global mode
+    if mode == 1:
+        startgame()
+    elif mode == 2:
+        setwindow()
+        jpgpaste()
+        wordpaste()
+        window[0].minimize()
+    elif mode == 3:
+        setwindow()
+        jpgpaste()
+        wordpaste()
+        window[0].minimize()
+        startgame()
 
 def Myprint(text):
     print(text)
@@ -62,18 +115,25 @@ def jpgpaste():
     send_to_clipboard(win32clipboard.CF_DIB, data)
     Mypaste()
 
-def wordpaste():
-    say = dic[random.randint(0,count-1)]
-    Myprint("Say: "+str(say))
-    pyperclip.copy(say)
-    Mypaste()
+def startgame():
+    random_game = random.randint(0,game_count-1)
+    Myprint("Launch Game:"+game_list[random_game][1])
+    os.system(steam_path+" steam://rungameid/"+str(game_list[random_game][0]))
+    time.sleep(random.randint(int(game_list[random_game][2]),int(game_list[random_game][3])))
+    os.system("taskkill /F /IM \""+str(game_list[random_game][1])+"\"")
 
-def Pastetest(): 
+def wordpaste():
+    say = dic[random.randint(0,dic_count-1)]
+    if random.randint(0,100)<say_chance :
+        Myprint("Say: "+str(say))
+        pyperclip.copy(say)
+        Mypaste()
+    else:
+        Myprint("No word this time.")
+
+def test(): 
     Myprint("Test:")
-    setwindow()
-    jpgpaste()
-    wordpaste()
-    window[0].minimize()
+    Sham()
     Myprint("Test End.\n")
 
 def breakline(type):
@@ -88,16 +148,16 @@ def breakline(type):
     Myprint(brkline+"\n")
 
 def setwindow():
-    window = pyautogui.getWindowsWithTitle(target_window_name)
+    window = pyautogui.getWindowsWithTitle(window_name)
     window[0].restore()
     window[0].activate()
 
 
 breakline("long")
-Myprint("Go!\nBegin Time:"+time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())+"\n")
+Myprint("Go!\nBegin Time:"+time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())+"\nMode:"+str(mode))
 
 time.sleep(3)
-Pastetest()
+test()
 
 while True:
     sleep_min = random.randint(sleep_min_min,sleep_min_max)
@@ -108,7 +168,4 @@ while True:
     Myprint("Wake: "+time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(t)))
     breakline("short")
     time.sleep(sleep_time)
-    setwindow()
-    jpgpaste()
-    wordpaste()
-    window[0].minimize()
+    Sham()

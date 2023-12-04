@@ -1,2 +1,6 @@
-0,12
-Sample
+[STEAM_PATH] PATH\TO\steam.exe
+[SLEEP_MIN] 0
+[SLEEP_MAX] 12
+[TARGET_WINDOW] Sample
+[MODE] 1
+[WORD_CHANCE] 67
