@@ -123,7 +123,7 @@ def startgame():
     os.system(steam_path+" steam://rungameid/"+str(game_list[random_game][0]))
     game_time = random_time(int(game_list[random_game][2]),int(game_list[random_game][3]))
     t = time.time()+game_time
-    Myprint("Close when:"+time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(t)))
+    Myprint("Close when: "+time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(t)))
     time.sleep(game_time)
     os.system("taskkill /F /IM \""+str(game_list[random_game][1])+"\"")
 

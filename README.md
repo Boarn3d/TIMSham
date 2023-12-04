@@ -4,7 +4,7 @@
 
 配置说明
 
-> **[STEAM_PATH]** PATH\TO\steam.exe **#指向你的steam可执行文件，用intwindows的目录符号\\**
+> **[STEAM_PATH]** PATH\TO\steam.exe **#指向你的steam可执行文件，用windows的目录符号\\**
 >
 > **[SLEEP_MIN]** 0 **#最短静默时间，单位为分钟**，int
 >
@@ -12,7 +12,7 @@
 >
 > **[TARGET_WINDOW]** Sample **#目标发言窗口标题**
 >
-> **[MODE]** 1 **#模式1：仅打开游戏；模式2：仅说话和发图片；模式3：说话、发图、开游戏**
+> **[MODE]** 1 **#模式1 仅打开游戏；模式2 仅说话和发图片；模式3 说话、发图、开游戏**
 >
 > **[WORD_CHANCE]** 67 **#在说话时有多少概率说话**，int(0-100)
 
