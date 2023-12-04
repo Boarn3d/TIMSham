@@ -23,7 +23,6 @@ mode = 0
 
 def Mysetup(var, content):
     if var == 'STEAM_PATH':
-        print("stm")
         global steam_path
         steam_path = content.replace("\\", "\\\\")
     elif var == 'SLEEP_MIN':
@@ -115,11 +114,17 @@ def jpgpaste():
     send_to_clipboard(win32clipboard.CF_DIB, data)
     Mypaste()
 
+def random_time(min,max):
+    return random.randint(min,max)*60+random.randint(0,59)
+
 def startgame():
     random_game = random.randint(0,game_count-1)
     Myprint("Launch Game:"+game_list[random_game][1])
     os.system(steam_path+" steam://rungameid/"+str(game_list[random_game][0]))
-    time.sleep(random.randint(int(game_list[random_game][2]),int(game_list[random_game][3])))
+    game_time = random_time(int(game_list[random_game][2]),int(game_list[random_game][3]))
+    t = time.time()+game_time
+    Myprint("Close when:"+time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(t)))
+    time.sleep(game_time)
     os.system("taskkill /F /IM \""+str(game_list[random_game][1])+"\"")
 
 def wordpaste():
