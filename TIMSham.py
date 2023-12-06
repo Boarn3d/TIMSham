@@ -66,19 +66,28 @@ with open(config_path, 'r',encoding='utf8') as fo:
 
 def Sham():
     global mode
-    if mode == 1:
+    if mode == 1: # only game
         startgame()
-    elif mode == 2:
+    elif mode == 2: #pic and word
         setwindow()
         jpgpaste()
         wordpaste()
         window[0].minimize()
-    elif mode == 3:
+    elif mode == 0: # game and pic
+        setwindow()
+        jpgpaste()
+        window[0].minimize()
+        startgame()
+    elif mode == 3: # all
         setwindow()
         jpgpaste()
         wordpaste()
         window[0].minimize()
         startgame()
+    elif mode == 4: # only pic
+        setwindow()
+        jpgpaste()
+        window[0].minimize()
 
 def Myprint(text):
     print(text)
@@ -103,10 +112,10 @@ def Mypaste():
     minibreak()
 
 def jpgpaste():
-    num = len(os.listdir(pic_dir))
-    pic_num = random.randint(1,num)
-    Img = Image.open(pic_dir+str(pic_num)+'.jpg')
-    Myprint("Pic: "+str(pic_num))
+    pic_list = os.listdir(pic_dir)
+    pic_num = random.randint(0,len(pic_list)-1)
+    Img = Image.open(pic_dir+pic_list[pic_num])
+    Myprint("Pic: "+str(pic_list[pic_num]))
     output = BytesIO()
     Img.convert("RGB").save(output, "BMP")
     data = output.getvalue()[14:]
