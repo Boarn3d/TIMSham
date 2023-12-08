@@ -15,7 +15,7 @@ dic_count = 0
 game_count = 0
 sleep_min_min = 0
 sleep_min_max = 12
-say_chance = 73
+say_chance = 100
 window = None
 window_name = None
 mode = 0
@@ -69,25 +69,25 @@ def Sham():
     if mode == 1: # only game
         startgame()
     elif mode == 2: #pic and word
-        setwindow()
-        jpgpaste()
-        wordpaste()
-        window[0].minimize()
+        if setwindow():
+            jpgpaste()
+            wordpaste()
+            window[0].minimize()
     elif mode == 0: # game and pic
-        setwindow()
-        jpgpaste()
-        window[0].minimize()
+        if setwindow():
+            jpgpaste()
+            window[0].minimize()
         startgame()
+    elif mode == -1: # only pic
+        if setwindow():
+            jpgpaste()
+            window[0].minimize()
     elif mode == 3: # all
-        setwindow()
-        jpgpaste()
-        wordpaste()
-        window[0].minimize()
+        if setwindow():
+            jpgpaste()
+            wordpaste()
+            window[0].minimize()
         startgame()
-    elif mode == 4: # only pic
-        setwindow()
-        jpgpaste()
-        window[0].minimize()
 
 def Myprint(text):
     print(text)
@@ -123,12 +123,13 @@ def jpgpaste():
     send_to_clipboard(win32clipboard.CF_DIB, data)
     Mypaste()
 
+
 def random_time(min,max):
     return random.randint(min,max)*60+random.randint(0,59)
 
 def startgame():
     random_game = random.randint(0,game_count-1)
-    Myprint("Launch Game:"+game_list[random_game][1])
+    Myprint("Launch Game: "+game_list[random_game][1])
     os.system(steam_path+" steam://rungameid/"+str(game_list[random_game][0]))
     game_time = random_time(int(game_list[random_game][2]),int(game_list[random_game][3]))
     t = time.time()+game_time
@@ -163,8 +164,12 @@ def breakline(type):
 
 def setwindow():
     window = pyautogui.getWindowsWithTitle(window_name)
+    if window == []:
+        Myprint("Couldn't find target window:"+window_name)
+        return False
     window[0].restore()
     window[0].activate()
+    return True
 
 
 breakline("long")
