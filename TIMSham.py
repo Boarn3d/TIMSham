@@ -38,7 +38,7 @@ def Mysetup(var, content):
         window = pyautogui.getWindowsWithTitle(window_name)
     elif var == 'MODE':
         global mode
-        mode = int(content)
+        mode = content.split(",")
     elif var == 'WORD_CHANCE':
         global say_chance
         say_chance = int(content)
@@ -66,28 +66,17 @@ with open(config_path, 'r',encoding='utf8') as fo:
 
 def Sham():
     global mode
-    if mode == 1: # only game
+    if (mode[2] == '1') or (mode[1] == '1') :
+        setwindow()
+        if window != []:
+            if mode[1] == '1':
+                jpgpaste()
+            if mode[2] == '1':
+                wordpaste()
+            window[0].minimize()
+    if mode[0] == '1':
         startgame()
-    elif mode == 2: #pic and word
-        if setwindow():
-            jpgpaste()
-            wordpaste()
-            window[0].minimize()
-    elif mode == 0: # game and pic
-        if setwindow():
-            jpgpaste()
-            window[0].minimize()
-        startgame()
-    elif mode == -1: # only pic
-        if setwindow():
-            jpgpaste()
-            window[0].minimize()
-    elif mode == 3: # all
-        if setwindow():
-            jpgpaste()
-            wordpaste()
-            window[0].minimize()
-        startgame()
+   
 
 def Myprint(text):
     print(text)
@@ -174,8 +163,6 @@ def setwindow():
 
 breakline("long")
 Myprint("Go!\nBegin Time:"+time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())+"\nMode:"+str(mode))
-
-time.sleep(3)
 test()
 
 while True:
